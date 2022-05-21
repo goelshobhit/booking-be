@@ -15,6 +15,7 @@ const exitHandler = () => {
   if (server) {
     server.close(() => {
       logger.info('Server closed');
+      mongoose.disconnect();
       process.exit(1);
     });
   } else {
