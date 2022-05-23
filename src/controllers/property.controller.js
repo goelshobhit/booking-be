@@ -17,7 +17,7 @@ const getPropertys = catchAsync(async (req, res) => {
 });
 
 const getProperty = catchAsync(async (req, res) => {
-  const Property = await propertyService.getPropertyById(req.params.PropertyId);
+  const Property = await propertyService.getPropertyById(req.params.propertyId);
   if (!Property) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Property not found');
   }

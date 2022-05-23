@@ -1,7 +1,8 @@
 const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
-const publicRoute = require('./property.route');
+const propertyRoute = require('./property.route');
+const locationRoute = require('./location.route');
 const fileRoute = require('./file.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
@@ -23,7 +24,11 @@ const defaultRoutes = [
   },
   {
     path: '/property',
-    route: publicRoute,
+    route: propertyRoute,
+  },
+  {
+    path: '/property-location',
+    route: locationRoute,
   },
 ];
 

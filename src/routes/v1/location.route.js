@@ -1,35 +1,34 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const propertyValidation = require('../../validations/property.validation');
-const propertyController = require('../../controllers/property.controller');
+const locationValidation = require('../../validations/location.validation');
+const locationController = require('../../controllers/location.controller');
 
 const router = express.Router();
 
-router.route('/').post(auth(), validate(propertyValidation.createProperty), propertyController.createProperty);
+router.route('/').post(auth(), validate(locationValidation.createLocation), locationController.createLocation);
 
 router
-  .route('/:propertyId')
-  .get(auth(), validate(propertyValidation.getProperty), propertyController.getProperty)
-  .patch(auth(), validate(propertyValidation.updateProperty), propertyController.updateProperty)
-  .delete(validate(propertyValidation.deleteProperty), propertyController.deleteProperty);
+  .route('/:locationId')
+  .patch(auth(), validate(locationValidation.updateLocation), locationController.updateLocation)
+  .delete(validate(locationValidation.deleteLocation), locationController.deleteLocation);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: property
+ *   name: location
  *   description: Property management and retrieval
  */
 
 /**
  * @swagger
- * /property:
+ * /location:
  *   post:
- *     summary: Create a property
- *     description: Only admins can create other property.
- *     tags: [property]
+ *     summary: Create a location
+ *     description: Only admins can create other location.
+ *     tags: [location]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -57,12 +56,12 @@ module.exports = router;
  *                 description: At least one number and one letter
  *               role:
  *                  type: string
- *                  enum: [property, admin]
+ *                  enum: [location, admin]
  *             example:
  *               name: fake name
  *               email: fake@example.com
  *               password: password1
- *               role: property
+ *               role: location
  *     responses:
  *       "201":
  *         description: Created
@@ -78,9 +77,9 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all property
- *     description: Only admins can retrieve all property.
- *     tags: [property]
+ *     summary: Get all location
+ *     description: Only admins can retrieve all location.
+ *     tags: [location]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -105,7 +104,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of property
+ *         description: Maximum number of location
  *       - in: query
  *         name: page
  *         schema:
@@ -145,11 +144,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /property/{id}:
+ * /location/{id}:
  *   get:
- *     summary: Get a property
- *     description: Logged in property can fetch only their own property information. Only admins can fetch other property.
- *     tags: [property]
+ *     summary: Get a location
+ *     description: Logged in location can fetch only their own location information. Only admins can fetch other location.
+ *     tags: [location]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -174,9 +173,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a property
- *     description: Logged in property can only update their own information. Only admins can update other property.
- *     tags: [property]
+ *     summary: Update a location
+ *     description: Logged in location can only update their own information. Only admins can update other location.
+ *     tags: [location]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -225,9 +224,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a property
- *     description: Logged in property can delete only themselves. Only admins can delete other property.
- *     tags: [property]
+ *     summary: Delete a location
+ *     description: Logged in location can delete only themselves. Only admins can delete other location.
+ *     tags: [location]
  *     security:
  *       - bearerAuth: []
  *     parameters:

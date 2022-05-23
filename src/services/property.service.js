@@ -8,6 +8,9 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Property>}
  */
 const createProperty = async (PropertyBody) => {
+  if (await Property.isPropertyTaken(PropertyBody.name)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Property Name is already taken');
+  }
   return Property.create(PropertyBody);
 };
 
