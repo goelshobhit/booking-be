@@ -34,7 +34,8 @@ const queryPropertys = async (filter, options) => {
  * @returns {Promise<Property>}
  */
 const getPropertyById = async (id) => {
-  return Property.findById(id);
+  const PropertyData = Property.findById(id);
+  return PropertyData;
 };
 
 /**

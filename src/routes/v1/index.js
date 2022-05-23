@@ -3,6 +3,7 @@ const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const propertyRoute = require('./property.route');
 const locationRoute = require('./location.route');
+const roomRoute = require('./room.route');
 const fileRoute = require('./file.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
@@ -29,6 +30,10 @@ const defaultRoutes = [
   {
     path: '/property-location',
     route: locationRoute,
+  },
+  {
+    path: '/property-room',
+    route: roomRoute,
   },
 ];
 

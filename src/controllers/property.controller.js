@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { propertyService } = require('../services');
+const { propertyService, locationService, roomService } = require('../services');
 
 const createProperty = catchAsync(async (req, res) => {
   const Property = await propertyService.createProperty(req.body);
@@ -21,7 +21,13 @@ const getProperty = catchAsync(async (req, res) => {
   if (!Property) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Property not found');
   }
-  res.send(Property);
+
+  const locationData = await locationService.getLocationByPropertyId(req.params.propertyId);
+
+  const propertyRooms = await roomService.getRoomsByPropertyId(req.params.propertyId);
+
+  const data = { ...Property._doc, location: locationData, rooms: propertyRooms };
+  res.send(data);
 });
 
 const updateProperty = catchAsync(async (req, res) => {
