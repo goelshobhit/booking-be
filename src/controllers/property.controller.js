@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { propertyService, locationService, roomService } = require('../services');
+const { propertyService, locationService, roomService, imageService } = require('../services');
 
 const createProperty = catchAsync(async (req, res) => {
   const Property = await propertyService.createProperty(req.body);
@@ -26,7 +26,15 @@ const getProperty = catchAsync(async (req, res) => {
 
   const propertyRooms = await roomService.getRoomsByPropertyId(req.params.propertyId);
 
-  const data = { ...Property._doc, location: locationData, rooms: propertyRooms };
+  const propertyImages = await imageService.getImagesByPropertyId(req.params.propertyId);
+
+  const data = {
+    ...Property._doc,
+    location: locationData,
+    rooms: propertyRooms,
+    images: propertyImages,
+    coverImage: propertyImages[0],
+  };
   res.send(data);
 });
 

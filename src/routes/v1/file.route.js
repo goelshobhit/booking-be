@@ -27,22 +27,28 @@ const upload = multer({ storage });
 
 router.route('/').post(upload.single('avatar'), auth(), validate(), fileController.createFile);
 
+router
+  .route('/:imageId')
+  .get(auth(), fileController.getImage)
+  .patch(auth(), fileController.updateImage)
+  .delete(auth(), fileController.deleteImage);
+
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Users
- *   description: User management and retrieval
+ *   name: Images
+ *   description: Image management and retrieval
  */
 
 /**
  * @swagger
- * /users:
+ * /files:
  *   post:
- *     summary: Create a user
- *     description: Only admins can create other users.
- *     tags: [Users]
+ *     summary: Create a file
+ *     description: Only admins can create other files.
+ *     tags: [Images]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -70,19 +76,19 @@ module.exports = router;
  *                 description: At least one number and one letter
  *               role:
  *                  type: string
- *                  enum: [user, admin]
+ *                  enum: [file, admin]
  *             example:
  *               name: fake name
  *               email: fake@example.com
  *               password: password1
- *               role: user
+ *               role: file
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Image'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -91,9 +97,9 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all users
- *     description: Only admins can retrieve all users.
- *     tags: [Users]
+ *     summary: Get all files
+ *     description: Only admins can retrieve all files.
+ *     tags: [Images]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -101,12 +107,12 @@ module.exports = router;
  *         name: name
  *         schema:
  *           type: string
- *         description: User name
+ *         description: Image name
  *       - in: query
  *         name: role
  *         schema:
  *           type: string
- *         description: User role
+ *         description: Image role
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -118,7 +124,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of files
  *       - in: query
  *         name: page
  *         schema:
@@ -137,7 +143,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/User'
+ *                     $ref: '#/components/schemas/Image'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -158,11 +164,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /users/{id}:
+ * /files/{id}:
  *   get:
- *     summary: Get a user
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
- *     tags: [Users]
+ *     summary: Get a file
+ *     description: Logged in files can fetch only their own file information. Only admins can fetch other files.
+ *     tags: [Images]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -171,14 +177,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Image id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Image'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -187,9 +193,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a user
- *     description: Logged in users can only update their own information. Only admins can update other users.
- *     tags: [Users]
+ *     summary: Update a file
+ *     description: Logged in files can only update their own information. Only admins can update other files.
+ *     tags: [Images]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -198,7 +204,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Image id
  *     requestBody:
  *       required: true
  *       content:
@@ -227,7 +233,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Image'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -238,9 +244,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a user
- *     description: Logged in users can delete only themselves. Only admins can delete other users.
- *     tags: [Users]
+ *     summary: Delete a file
+ *     description: Logged in files can delete only themselves. Only admins can delete other files.
+ *     tags: [Images]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -249,7 +255,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Image id
  *     responses:
  *       "200":
  *         description: No content
