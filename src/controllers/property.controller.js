@@ -11,7 +11,7 @@ const createProperty = catchAsync(async (req, res) => {
 
 const getPropertys = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name']);
-  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const options = { skip: req.query.skip || 0, limit: req.query.limit || 10 };
   const result = await propertyService.queryPropertys(filter, options);
   res.send(result);
 });

@@ -7,7 +7,7 @@ const propertyController = require('../../controllers/property.controller');
 const router = express.Router();
 
 router.route('/').post(auth(), validate(propertyValidation.createProperty), propertyController.createProperty);
-
+router.route('/all').get(propertyController.getPropertys);
 router
   .route('/:propertyId')
   .get(auth(), validate(propertyValidation.getProperty), propertyController.getProperty)

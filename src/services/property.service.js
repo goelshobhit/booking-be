@@ -24,8 +24,26 @@ const createProperty = async (PropertyBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryPropertys = async (filter, options) => {
-  const Properties = await Property.paginate(filter, options);
-  return Properties;
+  const Properties = await Property.aggregate([
+    {
+      $lookup: {
+        from: 'images',
+        localField: 'string',
+        foreignField: 'string',
+        as: 'image',
+      },
+    },
+    { $skip: options.skip },
+    { $limit: options.limit },
+  ]);
+
+  const PropertiesImages = Properties.map((item) => {
+    return {
+      ...item,
+      image: item.image.find((ele) => ele.propertyId.toString() === item._id.toString()) || {},
+    };
+  });
+  return PropertiesImages;
 };
 
 /**
